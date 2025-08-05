@@ -7,19 +7,14 @@ scanSound.load();
 
 
   const barcodeDatabase = {
-  "8905639296492": {
+  "8905693286233": {
     title: "Technosports T-Shirt",
-    price: 425,
+    price: 499,
     description: "Breathable cotton sportswear for summer collection.",
   },
-  "8905639127604": {
-    title: "polo t shirtBox",
-    price: 525,
-    description: "Free sample order from Technosports. No payment required.",
-  },
-    "219143198693481": {
-    title: "polo t shirtBox",
-    price: 525,
+  "219143198693481": {
+    title: "Prepaid Sample Box",
+    price: 1110,
     description: "Free sample order from Technosports. No payment required.",
   },
   "8905631870560": {
@@ -104,7 +99,7 @@ export default function Home() {
   const finalAmount = Math.max(0, totalAmount - discountAmount);
 
   return (
-   <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4 print:bg-white animate-fade-in">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4 print:bg-white animate-fade-in">
   <div className="max-w-7xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border border-gray-300 print-area">
     <h1 className="text-3xl font-bold text-center text-blue-700 mb-6 animate-slide-in print-hidden">
       📷 Technosports Barcode Scanner
@@ -253,7 +248,3 @@ export default function Home() {
 
   );
 }
-
-
-
-
