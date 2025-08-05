@@ -7,14 +7,14 @@ scanSound.load();
 
 
   const barcodeDatabase = {
-  "8905693286233": {
+  "8905639296492": {
     title: "Technosports T-Shirt",
-    price: 499,
+    price: 425,
     description: "Breathable cotton sportswear for summer collection.",
   },
-  "219143198693481": {
-    title: "Prepaid Sample Box",
-    price: 1110,
+  "8905639127604": {
+    title: "polo t shirtBox",
+    price: 525,
     description: "Free sample order from Technosports. No payment required.",
   },
   "8905631870560": {
@@ -261,3 +261,4 @@ export default function Home() {
     </div>
   );
 }
+
