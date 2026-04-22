@@ -7,15 +7,15 @@ scanSound.load();
 
 
   const barcodeDatabase = {
-  "8905639289678": {
-    title: "Technosports T-Shirt",
-    price: 499,
-    description: "Breathable cotton sportswear for summer collection.",
+  "909106035171": {
+    title: "Surf excel Matic",
+    price: 10,
+    description: "Removes tough dried stains",
   },
-  "8905639236887": {
-    title: "Prepaid Sample Box",
-    price: 1110,
-    description: "Free sample order from Technosports. No payment required.",
+  "909102234554": {
+    title: "Red tape corcs",
+    price: 699,
+    description: "Sandles for men",
   },
   "8905639289593": {
     title: "Technosports Premium Bottle",
@@ -102,7 +102,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4 print:bg-white animate-fade-in">
   <div className="max-w-7xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border border-gray-300 print-area">
     <h1 className="text-3xl font-bold text-center text-blue-700 mb-6 animate-slide-in print-hidden">
-      📷 Technosports Barcode Scanner
+      📷  Barcode Scanner
     </h1>
 
     <div className="flex flex-col lg:flex-row gap-8">
@@ -129,9 +129,9 @@ export default function Home() {
 
             <div className="font-mono text-sm space-y-3">
               <div className="text-center">
-                <h2 className="text-lg font-bold text-gray-800">Technosports</h2>
+                <h2 className="text-lg font-bold text-gray-800">panda barcode scanner</h2>
                 <p className="text-gray-600">GSTIN: 29ABCDE1234F1Z5</p>
-                <p className="text-gray-600">support@technosports.in</p>
+                <p className="text-gray-600">support@panda.in</p>
                 <hr className="my-2 border-t border-dashed border-gray-400" />
               </div>
 
