@@ -7,12 +7,12 @@ scanSound.load();
 
 
   const barcodeDatabase = {
-  "909106035171": {
+  "8909106035171": {
     title: "Surf excel Matic",
     price: 10,
     description: "Removes tough dried stains",
   },
-  "909102234554": {
+  "8909102234554": {
     title: "Red tape corcs",
     price: 699,
     description: "Sandles for men",
