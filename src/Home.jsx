@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Html5QrcodeScanner, Html5QrcodeScanType } from "html5-qrcode";
 
-// Load sound once at module level
 const scanSound = new Audio("beep.mp3");
 scanSound.load();
 
-
-  const barcodeDatabase = {
+const barcodeDatabase = {
   "8909106035171": {
     title: "Surf excel Matic",
     price: 10,
@@ -18,9 +16,10 @@ scanSound.load();
     description: "Sandles for men",
   },
   "22491A4210": {
-    title: "Choda subramanaym, AIML,B.tech 2022-2026 Batch Qis college of engineering and technology",
+    title:
+      "Choda subramanaym, AIML,B.tech 2022-2026 Batch Qis college of engineering and technology",
     price: null,
-    description: "Leak-proof, BPA-free sports bottle. Durable and lightweight.",
+    description: "Student / Profile Data",
   },
   "9D3P0PA#ACJ": {
     title: "HP Energy Star Package",
@@ -33,7 +32,6 @@ scanSound.load();
     description: "Premium quality kitchen utensil for daily cooking needs.",
   },
 };
-
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -61,19 +59,40 @@ export default function Home() {
           lastScannedRef.current = decodedText;
 
           const found = barcodeDatabase[decodedText];
+
           if (found) {
             scanSound.currentTime = 0;
             scanSound.play();
 
-            setItems((prevItems) => {
-              const index = prevItems.findIndex((item) => item.code === decodedText);
-              if (index !== -1) {
-                const newItems = [...prevItems];
-                newItems[index].quantity += 1;
-                return newItems;
-              } else {
-                return [...prevItems, { ...found, code: decodedText, quantity: 1 }];
+            setItems((prev) => {
+              // 👉 SPECIAL PROFILE CASE
+              if (decodedText === "22491A4210") {
+                return [
+                  {
+                    ...found,
+                    code: decodedText,
+                    isProfile: true,
+                  },
+                ];
               }
+
+              const index = prev.findIndex((i) => i.code === decodedText);
+
+              if (index !== -1) {
+                const copy = [...prev];
+                copy[index].quantity += 1;
+                return copy;
+              }
+
+              return [
+                ...prev,
+                {
+                  ...found,
+                  code: decodedText,
+                  quantity: 1,
+                  isProfile: false,
+                },
+              ];
             });
 
             setErrorMsg("");
@@ -84,9 +103,7 @@ export default function Home() {
           setTimeout(() => (lastScannedRef.current = null), 2000);
         }
       },
-      () => {
-        // Ignore scan errors
-      }
+      () => {}
     );
 
     return () => {
@@ -94,68 +111,83 @@ export default function Home() {
     };
   }, []);
 
-  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalAmount = items.reduce(
+    (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+    0
+  );
+
   const discountAmount = (totalAmount * discountPercent) / 100;
   const finalAmount = Math.max(0, totalAmount - discountAmount);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4 print:bg-white animate-fade-in">
-  <div className="max-w-7xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border border-gray-300 print-area">
-    <h1 className="text-3xl font-bold text-center text-blue-700 mb-6 animate-slide-in print-hidden">
-      📷  Barcode Scanner
-    </h1>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-lg">
 
-    <div className="flex flex-col lg:flex-row gap-8">
-      {/* Scanner Section */}
-      <div className="flex-1 print-hidden animate-zoom-in">
-        <div
-          id="reader"
-          className="w-full aspect-square rounded-2xl overflow-hidden border border-gray-400 shadow-lg"
-        />
-      </div>
+        <h1 className="text-2xl font-bold text-center mb-6">
+          📷 Barcode Scanner
+        </h1>
 
-      {/* Invoice Section */}
-      <div className="flex-1 animate-fade-in">
-        {items.length > 0 ? (
-          <>
-            <div className="flex justify-end mb-4 print-hidden">
-              <button
-                onClick={() => window.print()}
-                className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-5 py-2 rounded-xl hover:scale-105 transform transition duration-300 shadow-lg"
-              >
-                🖨️ Print Invoice
-              </button>
-            </div>
+        <div className="flex gap-6">
 
-            <div className="font-mono text-sm space-y-3">
-              <div className="text-center">
-                <h2 className="text-lg font-bold text-gray-800">panda barcode scanner</h2>
-                <p className="text-gray-600">GSTIN: 29ABCDE1234F1Z5</p>
-                <p className="text-gray-600">support@panda.in</p>
-                <hr className="my-2 border-t border-dashed border-gray-400" />
+          {/* Scanner */}
+          <div className="flex-1">
+            <div id="reader" className="border rounded-lg overflow-hidden" />
+          </div>
+
+          {/* Right Panel */}
+          <div className="flex-1">
+
+            {errorMsg && (
+              <div className="bg-red-100 text-red-700 p-3 rounded mb-3">
+                {errorMsg}
               </div>
+            )}
 
-              <div>
-                <p>Invoice Date: <strong>{new Date().toLocaleDateString()}</strong></p>
-                <p>Invoice No: <strong>TS-{Math.floor(Math.random() * 90000 + 10000)}</strong></p>
-                <p>Shipment Type: COD</p>
-                <p>Total Items: {items.reduce((acc, item) => acc + item.quantity, 0)}</p>
-              </div>
+            {items.length === 0 ? (
+              <p className="text-gray-500">Scan a barcode</p>
+            ) : (
+              <>
+                {items.map((item, idx) => {
+                  // ⭐ PROFILE VIEW
+                  if (item.isProfile) {
+                    return (
+                      <div
+                        key={idx}
+                        className="p-5 bg-blue-50 border rounded-xl shadow"
+                      >
+                        <h2 className="text-xl font-bold text-blue-800">
+                          👤 Profile Details
+                        </h2>
 
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-blue-100 text-blue-800">
-                    <th className="py-2 px-2 border-b">Item</th>
-                    <th className="py-2 px-2 border-b">Qty</th>
-                    <th className="py-2 px-2 border-b">Rate</th>
-                    <th className="py-2 px-2 border-b">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
-                      <td className="py-2 px-2">{item.title}</td>
-                      <td className="py-2 px-2 flex items-center gap-2">
+                        <p className="mt-2 font-semibold text-gray-800">
+                          {item.title}
+                        </p>
+
+                        <p className="text-gray-600 mt-1">
+                          {item.description}
+                        </p>
+
+                        <p className="text-xs text-gray-400 mt-2">
+                          ID: {item.code}
+                        </p>
+                      </div>
+                    );
+                  }
+
+                  // ⭐ NORMAL PRODUCT ROW
+                  return (
+                    <div
+                      key={idx}
+                      className="border p-3 rounded mb-2 flex justify-between items-center"
+                    >
+                      <div>
+                        <p className="font-semibold">{item.title}</p>
+                        <p className="text-sm text-gray-500">
+                          ₹{item.price}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() =>
                             setItems((prev) =>
@@ -166,85 +198,49 @@ export default function Home() {
                               )
                             )
                           }
-                          className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs"
-                        >−</button>
-                        {item.quantity}
+                        >
+                          -
+                        </button>
+
+                        <span>{item.quantity}</span>
+
                         <button
                           onClick={() =>
                             setItems((prev) =>
                               prev.map((i, iIdx) =>
-                                iIdx === idx ? { ...i, quantity: i.quantity + 1 } : i
+                                iIdx === idx
+                                  ? { ...i, quantity: i.quantity + 1 }
+                                  : i
                               )
                             )
                           }
-                          className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs"
-                        >+</button>
-                      </td>
-                      <td className="py-2 px-2">₹{item.price}</td>
-                      <td className="py-2 px-2">₹{item.price * item.quantity}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
 
-              <div className="text-right font-semibold">
-                Total Amount: ₹{totalAmount}
-              </div>
+                <hr className="my-3" />
 
-              <div className="text-right">
-                <label className="text-sm font-medium mr-2">Discount (%):</label>
+                <p>Total: ₹{totalAmount}</p>
+
                 <input
                   type="number"
                   value={discountPercent}
-                  onChange={(e) => setDiscountPercent(Number(e.target.value))}
-                  className="border px-2 py-1 text-sm w-20 rounded shadow-sm"
-                  min={0}
-                  max={100}
+                  onChange={(e) =>
+                    setDiscountPercent(Number(e.target.value))
+                  }
+                  className="border p-1 mt-2 w-20"
                 />
-              </div>
 
-              <div className="text-right font-semibold text-sm text-gray-600">
-                Discount Amount: ₹{discountAmount.toFixed(2)}
-              </div>
-
-              <div className="text-right font-bold text-green-700 text-base">
-                Final Amount: ₹{finalAmount.toFixed(2)}
-              </div>
-
-              <div className="mt-6 text-center print-hidden">
-                <h3 className="text-sm font-semibold mb-2">Pay via UPI</h3>
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
-                    `upi://pay?pa=${upiDetails.upiId}&pn=${upiDetails.payeeName}&am=${finalAmount.toFixed(
-                      2
-                    )}&cu=${upiDetails.currency}&tn=Technosports Invoice`
-                  )}&size=200x200&color=000000&bgcolor=E0F2FE`}
-                  alt="UPI QR Code"
-                  className="mx-auto rounded-xl shadow-lg border-4 border-blue-200"
-                />
-                <p className="text-xs text-gray-500 mt-2">
-                  Scan to pay ₹{finalAmount.toFixed(2)} to {upiDetails.payeeName}
-                </p>
-              </div>
-
-              <div className="mt-6 text-center text-gray-500 text-xs border-t pt-2">
-                This is a computer-generated invoice. No signature required.
-              </div>
-            </div>
-          </>
-        ) : errorMsg ? (
-          <div className="p-4 rounded bg-red-100 text-red-800 text-center font-semibold print-hidden animate-pulse">
-            {errorMsg}
+                <p>Final: ₹{finalAmount.toFixed(2)}</p>
+              </>
+            )}
           </div>
-        ) : (
-          <p className="text-gray-500 text-center print-hidden animate-fade-in">
-            Scan a barcode to generate an invoice
-          </p>
-        )}
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
   );
 }
