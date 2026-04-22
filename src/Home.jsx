@@ -17,9 +17,9 @@ scanSound.load();
     price: 699,
     description: "Sandles for men",
   },
-  "8905639289593": {
-    title: "Technosports Premium Bottle",
-    price: 799,
+  "22491A4210": {
+    title: "Choda subramanaym, AIML,B.tech 2022-2026 Batch Qis college of engineering and technology",
+    price: null,
     description: "Leak-proof, BPA-free sports bottle. Durable and lightweight.",
   },
   "9D3P0PA#ACJ": {
